@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcryptjs from "bcryptjs";
 
 const UserSchema = new mongoose.Schema({
   email: {
@@ -42,6 +43,12 @@ const UserSchema = new mongoose.Schema({
       "The value of path `{PATH}` (`{VALUE}`) is shorter than the minimum allowed length ({MINLENGTH}).",
     ],
   },
+});
+
+// Setup bcryptjs for password hashing
+UserSchema.pre("save", async function () {
+  let salt = await bcryptjs.getSalt(10);
+  this.password = await bcryptjs.hash(this.password, salt);
 });
 
 const User = mongoose.model("Users", UserSchema);
