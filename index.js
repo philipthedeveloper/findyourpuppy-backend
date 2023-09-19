@@ -5,6 +5,7 @@ import {
   requestLogger,
   methodChecker,
   routeNotFound,
+  errorHandler,
 } from "./middlewares/index.js";
 
 // Configure the app to be able to read env variables
@@ -25,6 +26,7 @@ app.use(methodChecker); // Checks if the incoming request method is supported
 
 // All route that are not handled from the top will be handled here
 app.all("*", routeNotFound); // Returns a 404 response for such routes
+app.use(errorHandler); // Handles all error in the app
 
 // Start the app
 app.listen(PORT, HOSTNAME, () => {
