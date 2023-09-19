@@ -51,6 +51,11 @@ UserSchema.pre("save", async function () {
   this.password = await bcryptjs.hash(this.password, salt);
 });
 
+// Setup document method for password validation
+UserSchema.methods.validatePassword = async function (inputPassword) {
+  return await bcryptjs.compare(inputPassword, this.password);
+};
+
 const User = mongoose.model("Users", UserSchema);
 
 export default User;
