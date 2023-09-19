@@ -66,7 +66,7 @@ UserSchema.methods.generateToken = function ({ userId, email, phoneNumber }) {
 };
 
 // Validates the JWT to avoid malforms
-UserSchema.methods.validateToken = function () {
+UserSchema.methods.validateToken = function (token) {
   return jwt.verify(token, process.env.JWT_SECRET, {
     issuer: process.env.ISSUER,
   });
