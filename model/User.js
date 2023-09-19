@@ -65,6 +65,13 @@ UserSchema.methods.generateToken = function ({ userId, email, phoneNumber }) {
   return token;
 };
 
+// Validates the JWT to avoid malforms
+UserSchema.methods.validateToken = function () {
+  return jwt.verify(token, process.env.JWT_SECRET, {
+    issuer: process.env.ISSUER,
+  });
+};
+
 const User = mongoose.model("Users", UserSchema);
 
 export default User;
