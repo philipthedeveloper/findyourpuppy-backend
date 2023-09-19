@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcryptjs from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const UserSchema = new mongoose.Schema({
   email: {
@@ -54,6 +55,14 @@ UserSchema.pre("save", async function () {
 // Setup document method for password validation
 UserSchema.methods.validatePassword = async function (inputPassword) {
   return await bcryptjs.compare(inputPassword, this.password);
+};
+
+// Setup jwt for token management
+UserSchema.methods.generateToken = function ({ userId, email, phoneNumber }) {
+  let token = jwt.sign({ userId, email, phoneNumber }, process.env.JWT_SECRET, {
+    issuer: process.env.ISSUER,
+  });
+  return token;
 };
 
 const User = mongoose.model("Users", UserSchema);
