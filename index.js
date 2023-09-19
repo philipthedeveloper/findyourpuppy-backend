@@ -7,6 +7,7 @@ import {
   routeNotFound,
   errorHandler,
 } from "./middlewares/index.js";
+import connectDB from "./connection/mongodb.js";
 
 // Configure the app to be able to read env variables
 dotenv.config({ path: ".env" });
@@ -28,7 +29,11 @@ app.use(methodChecker); // Checks if the incoming request method is supported
 app.all("*", routeNotFound); // Returns a 404 response for such routes
 app.use(errorHandler); // Handles all error in the app
 
-// Start the app
-app.listen(PORT, HOSTNAME, () => {
-  console.log(`App started on http://${HOSTNAME}:${PORT}`);
-});
+// Starts the app
+const startExpressApp = () =>
+  app.listen(PORT, HOSTNAME, () => {
+    console.log(`App started on http://${HOSTNAME}:${PORT}`);
+  });
+
+// Connect to the database then start the app
+connectDB(startExpressApp);
