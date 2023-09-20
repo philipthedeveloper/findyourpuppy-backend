@@ -52,4 +52,38 @@ const login = async function (req, res) {
   });
 };
 
-export { login };
+const register = async function (req, res) {
+  const data = req.body;
+  const numOfKeys = Object.keys(data).length;
+  if (numOfKeys === 0)
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      success: true,
+      status: StatusCodes.BAD_REQUEST,
+      message: "Provide all fields",
+    });
+  const newUser = await User.create(data);
+  const { _id, email, phoneNumber, accountType, firstName, lastName, country } =
+    newUser;
+  const accessToken = newUser.generateToken({
+    userId: _id,
+    email,
+    phoneNumber,
+  });
+  return res.status(StatusCodes.CREATED).json({
+    success: true,
+    status: StatusCodes.CREATED,
+    message: "Account created successfully",
+    user: {
+      userId: _id,
+      email,
+      phoneNumber,
+      accountType,
+      firstName,
+      lastName,
+      country,
+    },
+    accessToken,
+  });
+};
+
+export { login, register };
