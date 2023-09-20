@@ -1,11 +1,7 @@
-import { StatusCodes } from "http-status-codes";
+import { createNotFoundError } from "../errors/index.js";
 
 const routeNotFound = (req, res) => {
-  return res.status(StatusCodes.NOT_FOUND).json({
-    success: false,
-    status: StatusCodes.NOT_FOUND,
-    messsage: `${req.url} does not exist`,
-  });
+  throw createNotFoundError(`${req.url} does not exist`);
 };
 
 export default routeNotFound;
