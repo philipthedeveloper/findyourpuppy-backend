@@ -1,4 +1,4 @@
-import { User } from "../models";
+import { User } from "../models/index.js";
 import { StatusCodes } from "http-status-codes";
 
 const login = async function (req, res) {
