@@ -44,6 +44,13 @@ const UserSchema = new mongoose.Schema({
       "The value of path `{PATH}` (`{VALUE}`) is shorter than the minimum allowed length ({MINLENGTH}).",
     ],
   },
+  accountType: {
+    default: "user",
+    enum: {
+      values: ["user", "admin"],
+      message: "Invalid `{PATH}` (`{VALUE}`)",
+    },
+  },
 });
 
 // Setup bcryptjs for password hashing
