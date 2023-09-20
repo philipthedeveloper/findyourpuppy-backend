@@ -1,23 +1,18 @@
 import { User } from "../models/index.js";
 import { StatusCodes } from "http-status-codes";
+import {
+  createBadRequestError,
+  createUnauthorizedError,
+} from "../errors/index.js";
 
 const login = async function (req, res) {
   const data = req.body;
   const numOfKeys = Object.keys(data).length;
   if (numOfKeys === 0 || !data.email || !data.password)
-    return res.status(StatusCodes.BAD_REQUEST).json({
-      success: false,
-      status: StatusCodes.BAD_REQUEST,
-      message: "Email and Password required",
-    });
+    throw createBadRequestError("Email and Password required");
 
   const user = await User.findOne({ email: data.email });
-  if (!user)
-    return res.status(StatusCodes.UNAUTHORIZED).json({
-      success: false,
-      status: StatusCodes.UNAUTHORIZED,
-      message: "Invalid Email or Password",
-    });
+  if (!user) throw createUnauthorizedError("Invalid Email or Password");
   // Validate the password using the document method (validatePassword)
   /**
    * @function
@@ -26,11 +21,7 @@ const login = async function (req, res) {
    */
   const isValidPassword = await user.validatePassword(data.password);
   if (!isValidPassword)
-    return res.status(StatusCodes.UNAUTHORIZED).json({
-      success: false,
-      status: StatusCodes.UNAUTHORIZED,
-      message: "Invalid Email or Password",
-    });
+    throw createUnauthorizedError("Invalid Email or Password");
   // Generate jwt for valid email and password
   const { _id, email, phoneNumber, accountType, firstName, lastName, country } =
     user;
@@ -55,12 +46,7 @@ const login = async function (req, res) {
 const register = async function (req, res) {
   const data = req.body;
   const numOfKeys = Object.keys(data).length;
-  if (numOfKeys === 0)
-    return res.status(StatusCodes.BAD_REQUEST).json({
-      success: true,
-      status: StatusCodes.BAD_REQUEST,
-      message: "Provide all fields",
-    });
+  if (numOfKeys === 0) throw createBadRequestError("Provide all fields");
   const newUser = await User.create(data);
   const { _id, email, phoneNumber, accountType, firstName, lastName, country } =
     newUser;
