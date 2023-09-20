@@ -1,10 +1,10 @@
 import { StatusCodes, ReasonPhrases } from "http-status-codes";
 import CustomError from "../errors/CustomError.js";
+import { createConflictError } from "../errors/Conflict.js";
 
 const errorHandler = (err, req, res, next) => {
   let errorObject = {};
   console.log(err);
-  console.log(err instanceof CustomError);
   if (err instanceof CustomError) {
     errorObject.status = err.statusCode;
     errorObject.message = err.message;
@@ -12,6 +12,12 @@ const errorHandler = (err, req, res, next) => {
   if (err && err.name === "ValidationError") {
     errorObject.status = StatusCodes.BAD_REQUEST;
     errorObject.message = err.message;
+  }
+  if (err && err.code === 11000) {
+    let message = Object.keys(err.keyValue).join(", ");
+    let newConflictError = createConflictError(`${message} already exist`);
+    errorObject.status = newConflictError.statusCode;
+    errorObject.message = newConflictError.message;
   }
   let status = errorObject?.status || StatusCodes.INTERNAL_SERVER_ERROR;
   return res.status(status).json({
