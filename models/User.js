@@ -56,7 +56,7 @@ const UserSchema = new mongoose.Schema({
 
 // Setup bcryptjs for password hashing
 UserSchema.pre("save", async function () {
-  let salt = await bcryptjs.getSalt(10);
+  let salt = await bcryptjs.genSalt(10);
   this.password = await bcryptjs.hash(this.password, salt);
 });
 
@@ -69,6 +69,7 @@ UserSchema.methods.validatePassword = async function (inputPassword) {
 UserSchema.methods.generateToken = function ({ userId, email, phoneNumber }) {
   let token = jwt.sign({ userId, email, phoneNumber }, process.env.JWT_SECRET, {
     issuer: process.env.ISSUER,
+    expiresIn: process.env.JWT_EXPIRATION,
   });
   return token;
 };
