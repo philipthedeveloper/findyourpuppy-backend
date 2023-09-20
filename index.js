@@ -8,6 +8,7 @@ import {
   errorHandler,
 } from "./middlewares/index.js";
 import connectDB from "./connection/mongodb.js";
+import { authRouter } from "./routes/index.js";
 
 // Configure the app to be able to read env variables
 dotenv.config({ path: ".env" });
@@ -24,6 +25,9 @@ const HOSTNAME = NODE_ENV === "development" ? IPV4_ADDRESS : null;
 // Set up middlewares for the app
 app.use(requestLogger); // Log any incoming request to the console
 app.use(methodChecker); // Checks if the incoming request method is supported
+
+// Set up routing handlers
+app.use("/auth", authRouter);
 
 // All route that are not handled from the top will be handled here
 app.all("*", routeNotFound); // Returns a 404 response for such routes
