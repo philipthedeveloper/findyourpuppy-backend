@@ -1,4 +1,5 @@
-import { StatusCodes, ReasonPhrases } from "http-status-codes";
+import { ReasonPhrases } from "http-status-codes";
+import { createMethodNotAllowedError } from "../errors/index.js";
 
 const ALLOWED_METHODS = [
   "GET",
@@ -11,11 +12,7 @@ const ALLOWED_METHODS = [
 ];
 const methodChecker = (req, res, next) => {
   if (!ALLOWED_METHODS.includes(req.method.toUpperCase()))
-    return res.status(StatusCodes.METHOD_NOT_ALLOWED).json({
-      success: false,
-      status: StatusCodes.METHOD_NOT_ALLOWED,
-      message: ReasonPhrases.METHOD_NOT_ALLOWED,
-    });
+    throw createMethodNotAllowedError(ReasonPhrases.METHOD_NOT_ALLOWED);
   next();
 };
 
