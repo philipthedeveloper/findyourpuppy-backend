@@ -1,8 +1,13 @@
 import { StatusCodes, ReasonPhrases } from "http-status-codes";
+import CustomError from "../errors/CustomError.js";
 
 const errorHandler = (err, req, res, next) => {
   let errorObject = {};
   console.log(err);
+  if (err instanceof CustomError) {
+    errorObject.status = err.statusCode;
+    errorObject.message = err.message;
+  }
   if (err && err.name === "ValidationError") {
     errorObject.status = StatusCodes.BAD_REQUEST;
     errorObject.message = err.message;
