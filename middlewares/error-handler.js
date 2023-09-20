@@ -4,15 +4,16 @@ import CustomError from "../errors/CustomError.js";
 const errorHandler = (err, req, res, next) => {
   let errorObject = {};
   console.log(err);
+  console.log(err instanceof CustomError);
   if (err instanceof CustomError) {
     errorObject.status = err.statusCode;
     errorObject.message = err.message;
   }
   if (err && err.name === "ValidationError") {
-    errorObject.statusCode = StatusCodes.BAD_REQUEST;
+    errorObject.status = StatusCodes.BAD_REQUEST;
     errorObject.message = err.message;
   }
-  let status = errorObject?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
+  let status = errorObject?.status || StatusCodes.INTERNAL_SERVER_ERROR;
   return res.status(status).json({
     success: false,
     status,
