@@ -1,4 +1,4 @@
-import CustomError from "./CustomError";
+import CustomError from "./CustomError.js";
 import { StatusCodes } from "http-status-codes";
 
 export default class ConflictError extends CustomError {
