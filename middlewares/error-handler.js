@@ -9,7 +9,7 @@ const errorHandler = (err, req, res, next) => {
     errorObject.message = err.message;
   }
   if (err && err.name === "ValidationError") {
-    errorObject.status = StatusCodes.BAD_REQUEST;
+    errorObject.statusCode = StatusCodes.BAD_REQUEST;
     errorObject.message = err.message;
   }
   let status = errorObject?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
