@@ -72,4 +72,33 @@ const register = async function (req, res) {
   });
 };
 
-export { login, register };
+const getUser = async (req, res) => {
+  if (req.currentUser) {
+    const {
+      _id,
+      email,
+      phoneNumber,
+      accountType,
+      firstName,
+      lastName,
+      country,
+    } = req.currentUser;
+    res.status(StatusCodes.OK).json({
+      success: true,
+      status: StatusCodes.OK,
+      message: "Successful",
+      user: {
+        userId: _id,
+        email,
+        phoneNumber,
+        accountType,
+        firstName,
+        lastName,
+        country,
+      },
+    });
+  }
+  throw createUnauthorizedError("User not authenticated");
+};
+
+export { login, register, getUser };
