@@ -83,7 +83,7 @@ const getUser = async (req, res) => {
       lastName,
       country,
     } = req.currentUser;
-    res.status(StatusCodes.OK).json({
+    return res.status(StatusCodes.OK).json({
       success: true,
       status: StatusCodes.OK,
       message: "Successful",
