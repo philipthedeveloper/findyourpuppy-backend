@@ -9,6 +9,7 @@ import {
 } from "./middlewares/index.js";
 import connectDB from "./connection/mongodb.js";
 import { authRouter } from "./routes/index.js";
+import cors from "cors";
 
 // Configure the app to be able to read env variables
 dotenv.config({ path: ".env" });
@@ -23,10 +24,20 @@ const IPV4_ADDRESS = process.env.IPV4_ADDRESS;
 const HOSTNAME = NODE_ENV === "development" ? IPV4_ADDRESS : null;
 
 // Set up middlewares for the app
-app.use(requestLogger); // Log any incoming request to the console
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "http://192.168.137.1:5173",
+      process.env.CORS_ORIGIN,
+    ],
+    credentials: true,
+  })
+);
 app.use(methodChecker); // Checks if the incoming request method is supported
 app.use(express.urlencoded({ extended: true })); // Parse urlencoded data in request body
 app.use(express.json({})); // Parse json data in request body
+app.use(requestLogger); // Log any incoming request to the console
 
 // Set up routing handlers
 app.use("/auth", authRouter);
