@@ -19,6 +19,13 @@ const errorHandler = (err, req, res, next) => {
     errorObject.status = newConflictError.statusCode;
     errorObject.message = newConflictError.message;
   }
+  if (
+    err &&
+    (err.name === "JsonWebTokenError" || err.name === "TokenExpiredError")
+  ) {
+    errorObject.message = err.message;
+    errorObject.status = StatusCodes.UNAUTHORIZED;
+  }
   let status = errorObject?.status || StatusCodes.INTERNAL_SERVER_ERROR;
   return res.status(status).json({
     success: false,
