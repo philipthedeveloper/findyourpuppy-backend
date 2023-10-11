@@ -52,6 +52,10 @@ const UserSchema = new mongoose.Schema({
       message: "Invalid `{PATH}` (`{VALUE}`)",
     },
   },
+  subscribeToEmails: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // Setup bcryptjs for password hashing

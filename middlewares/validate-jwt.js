@@ -7,7 +7,8 @@ const validateToken = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   // Ensure the authorization property is present in req headers
   if (!authHeader || !authHeader.startsWith("Bearer "))
-    throw createUnauthorizedError("Token not provided");
+    // throw createUnauthorizedError("Token not provided");
+    throw createUnauthorizedError("Unauthorized User");
   // Extract the token from the authorization header
   const token = authHeader.split(" ")[1];
   // Verify the token with jwt

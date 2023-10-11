@@ -4,7 +4,7 @@ import { createConflictError } from "../errors/Conflict.js";
 
 const errorHandler = (err, req, res, next) => {
   let errorObject = {};
-  console.log(err);
+  // console.log(err);
   if (err instanceof CustomError) {
     errorObject.status = err.statusCode;
     errorObject.message = err.message;
@@ -19,6 +19,10 @@ const errorHandler = (err, req, res, next) => {
     errorObject.status = newConflictError.statusCode;
     errorObject.message = newConflictError.message;
   }
+  if (err && err.name === "CastError") {
+    errorObject.message = `${err.value} is not a valid ${err?.kind}`;
+    errorObject.status = StatusCodes.UNPROCESSABLE_ENTITY;
+  }
   if (
     err &&
     (err.name === "JsonWebTokenError" || err.name === "TokenExpiredError")
@@ -26,11 +30,20 @@ const errorHandler = (err, req, res, next) => {
     errorObject.message = err.message;
     errorObject.status = StatusCodes.UNAUTHORIZED;
   }
-  let status = errorObject?.status || StatusCodes.INTERNAL_SERVER_ERROR;
+  if (err instanceof SyntaxError || err?.type === "entity.parse.failed") {
+    errorObject.status = StatusCodes.BAD_REQUEST;
+    errorObject.message = err?.message || "Syntax error in request body";
+  }
+  let status =
+    errorObject?.status ||
+    err?.status ||
+    err?.statusCode ||
+    StatusCodes.INTERNAL_SERVER_ERROR;
   return res.status(status).json({
     success: false,
     status,
-    message: errorObject?.message || ReasonPhrases.INTERNAL_SERVER_ERROR,
+    message:
+      errorObject?.message || err?.message || StatusCodes.INTERNAL_SERVER_ERROR,
   });
 };
 
