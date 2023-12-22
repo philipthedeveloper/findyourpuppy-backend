@@ -50,7 +50,7 @@ app.use(errorHandler); // Handles all error in the app
 // Starts the app
 const startExpressApp = () =>
   app.listen(PORT, HOSTNAME, () => {
-    console.log(`App started on http://${HOSTNAME}:${PORT}`);
+    console.log(`App started on http://${HOSTNAME || "localhost"}:${PORT}`);
   });
 
 // Connect to the database then start the app
